@@ -1,6 +1,43 @@
 version: "3.8"
 services:
   backend:
+    container_name: docker-demo-backend
+    build:
+      context: ./docker/backend
+    ports:
+      - "4444:80"
+    volumes:
+      # - ./example-app:/var/www/html
+      - ./docker/backend/vendor:/var/www/html/vendor
+      - ./docker/backend/logs:/var/log/httpd
+    links:
+      - mysql
+      - redis
+      - mail
+    depends_on:
+      - mysql
   frontend:
+    container_name: docker-demo-frontend
+    build:
+      context: ./docker/frontend
+    ports:
+      - "3000:8080"
+    volumes:
+       - ./hello-world:/usr/src/app/demo
+       - ./docker/frontend/node_modules:/src/app/demo/node_modules
+  mysql:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_USER: teo
+      MYSQL_PASSWORD: nguyenvanteo
+      MYSQL_DATABASE: demodocker
+  redis:
+    image: redis:3.2
   mail:
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
   
