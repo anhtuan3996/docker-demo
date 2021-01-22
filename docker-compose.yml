@@ -1,13 +1,13 @@
 version: "3.8"
 services:
   backend:
-    container_name: docker-demo-backend
+    container_name: demo-backend
     build:
       context: ./docker/backend
     ports:
       - "4444:80"
     volumes:
-      # - ./example-app:/var/www/html
+      - ./example-app:/var/www/html
       - ./docker/backend/vendor:/var/www/html/vendor
       - ./docker/backend/logs:/var/log/httpd
     links:
@@ -17,14 +17,13 @@ services:
     depends_on:
       - mysql
   frontend:
-    container_name: docker-demo-frontend
+    container_name: demo-frontend
     build:
       context: ./docker/frontend
     ports:
-      - "3000:8080"
+      - "3333:8080"
     volumes:
-       - ./hello-world:/usr/src/app/demo
-       - ./docker/frontend/node_modules:/src/app/demo/node_modules
+      - ./hello-world:/usr/src/app/demo
   mysql:
     image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
